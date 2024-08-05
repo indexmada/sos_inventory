@@ -42,8 +42,10 @@ class StockMoveLine(models.Model):
 	def _prepare_analytic_vals(self, picking_id=False):
 		if not picking_id:
 			picking_id = self.picking_id
+		records = [rec for rec in [self.product_id.product_tmpl_id.name, picking_id.name] if rec]
+		name = "-".join(records)
 		return {
-			'name': self.product_id.product_tmpl_id.name +' - ' + picking_id.name,
+			'name': name,
 			'ref':picking_id.name,
 			'product_id': self.product_id.id,
 			'partner_id':picking_id.partner_id.id,
