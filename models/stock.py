@@ -60,12 +60,13 @@ class StockMoveLine(models.Model):
 		analytics = self.env["account.analytic.line"].sudo()
 		
 		for line in self:
-			val = line._prepare_analytic_vals(picking_id=self.picking_id)
-			existing_ = line._check_if_exit_analytic()
-			if existing_:
-				existing_.write(val)
-			else:
-				analytics.create(val)
+			if line.analytic_account_id.id:
+				val = line._prepare_analytic_vals(picking_id=self.picking_id)
+				existing_ = line._check_if_exit_analytic()
+				if existing_:
+					existing_.write(val)
+				else:
+					analytics.create(val)
 		return True
 
 	def write(self, vals):
